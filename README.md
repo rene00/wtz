@@ -5,7 +5,7 @@ _What timezone?_
 A small command line tool that shows times in timezones you're interested in:
 
 The current timezone of your computer:
-```bash
+```
 $ wtz
 +-----------+
 | MELBOURNE |
@@ -18,7 +18,7 @@ $ wtz
 ```
 
 The current timezone of your computer and other timezones you're interested in.
-```bash
+```
 $ wtz --tz Europe/Madrid,America/New_York,America/Argentina/Buenos_Aires,UTC
 +-----------+--------+----------+--------------+-------+
 | MELBOURNE | MADRID | NEW YORK | BUENOS AIRES |  UTC  |
