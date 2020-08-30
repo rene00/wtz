@@ -4,7 +4,7 @@ import (
 	"wtz/cmd"
 )
 
-const version = "0.0.0"
+const version = "0.0.1"
 
 func main() {
 	cmd.SetVersion(version)
