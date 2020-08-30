@@ -1,0 +1,38 @@
+name: Release
+on: 
+  push:
+    tags:
+    - 'v*'
+
+jobs:
+  build:
+    name: release
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: setup go
+      uses: actions/setup-go@v2
+      with:
+        go-version: '1.15.0'
+
+    - name: Add $GOPATH/bin to $PATH
+      run: echo "::add-path::$(go env GOPATH)/bin" 
+
+    - name: cross build
+      run: make cross
+
+    - name: create release
+      id: create_release
+      uses: actions/create-release@master
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: Release ${{ github.ref }}
+
+    - name: upload
+      run: make upload
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
