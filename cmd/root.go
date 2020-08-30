@@ -28,9 +28,11 @@ func localAsOlson() (string, error) {
 func generateRows(local *time.Location, locations []string) ([][]string, error) {
 	rows := [][]string{}
 
+	today := time.Now().Format("2006-01-02")
+
 	for i := 0; i <= 23; i++ {
 		tzRow := []string{}
-		localTime, err := time.ParseInLocation("2006-01-02 15:04:05", fmt.Sprintf("2020-01-01 %02d:00:00", i), local)
+		localTime, err := time.ParseInLocation("2006-01-02 15:04:05", fmt.Sprintf("%s %02d:00:00", today, i), local)
 		if err != nil {
 			return rows, err
 		}
