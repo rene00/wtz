@@ -52,7 +52,7 @@ $ wtz --tz Europe/Madrid,America/New_York,America/Argentina/Buenos_Aires,UTC
 
 Same command above, but for a future date:
 ```
-$ wtz --tz Europe/Madrid,America/New_York,America/Argentina/Buenos_Aires,UTC --date 2022-01-01                                                                                                      
+$ wtz --tz Europe/Madrid,America/New_York,America/Argentina/Buenos_Aires,UTC --date 2022-01-01
 +-----------+--------+----------+--------------+-------+
 | MELBOURNE | MADRID | NEW YORK | BUENOS AIRES |  UTC  |
 +-----------+--------+----------+--------------+-------+
