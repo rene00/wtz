@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -70,7 +71,7 @@ var rootCmd = &cobra.Command{
 
 		date, err := time.Parse("2006-01-02", viper.GetString("date"))
 		if err != nil {
-			return fmt.Errorf("Failed to correctly parse date param, want YYYY-MM-DD format\n")
+			return errors.New("failed to correctly parse date param, want YYYY-MM-DD format")
 		}
 
 		tz := viper.GetStringSlice("tz")
