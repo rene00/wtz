@@ -5,26 +5,13 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
-	"strings"
 	"time"
 
 	"github.com/olekukonko/tablewriter"
+	"github.com/rene00/wtz/internal/tz"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
-
-func localAsOlson() (string, error) {
-	fileLink, err := os.Readlink("/etc/localtime")
-	if err != nil {
-		return "", err
-	}
-
-	tz := fileLink
-	for _, i := range []string{"/usr/share/zoneinfo/", "/var/db/timezone/zoneinfo/"} {
-		tz = strings.ReplaceAll(tz, i, "")
-	}
-	return tz, nil
-}
 
 func generateRows(date time.Time, local *time.Location, locations []string) ([][]string, error) {
 	rows := [][]string{}
@@ -54,17 +41,18 @@ func generateRows(date time.Time, local *time.Location, locations []string) ([][
 var rootCmd = &cobra.Command{
 	Use: "wtz [command]",
 	PreRun: func(cmd *cobra.Command, args []string) {
-		for _, flag := range []string{"tz", "date"} {
+		for _, flag := range []string{"localtime", "tz", "date"} {
 			_ = viper.BindPFlag(flag, cmd.Flags().Lookup(flag))
 		}
 	},
 	RunE: func(cmd *cobra.Command, args []string) error {
-		localOlson, err := localAsOlson()
+		t := tz.NewTz(viper.GetString("localtime"))
+		zoneinfo, err := t.Zoneinfo()
 		if err != nil {
 			return err
 		}
 
-		local, err := time.LoadLocation(localOlson)
+		local, err := time.LoadLocation(zoneinfo)
 		if err != nil {
 			return err
 		}
@@ -81,7 +69,7 @@ var rootCmd = &cobra.Command{
 			return err
 		}
 
-		_, localCity := filepath.Split(localOlson)
+		_, localCity := filepath.Split(zoneinfo)
 
 		cities := []string{localCity}
 		for _, i := range tz {
@@ -101,6 +89,7 @@ var rootCmd = &cobra.Command{
 
 func init() {
 	f := rootCmd.Flags()
+	f.String("localtime", "/etc/localtime", "filepath to localtime which is usually /etc/localtime")
 	f.StringSlice("tz", []string{""}, "timezones")
 	f.String("date", time.Now().Format("2006-01-02"), "date")
 }

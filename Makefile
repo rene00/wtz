@@ -41,7 +41,15 @@ $(GOBIN)/gobump:
 .PHONY: lint
 lint: $(GOBIN)/golint
 	go vet .
-	golint -set_exit_status . cmd
+	golint -set_exit_status . cmd internal/...
+
+.PHONY: test
+test: clean build
+	go test -cover ./...
+
+.PHONY: integration-tests
+integration-tests: clean install
+	bats -t tests/integration/*.bats
 
 .PHONY: upload
 upload: $(GOBIN)/ghr

@@ -1,4 +1,4 @@
-module wtz
+module github.com/rene00/wtz
 
 go 1.14
 
