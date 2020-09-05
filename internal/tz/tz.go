@@ -5,13 +5,14 @@ import (
 	"strings"
 )
 
-type tz struct {
+// Tz provides info on timezone for local environment.
+type Tz struct {
 	// filepath to localtime which is usually /etc/localtime.
 	localtimeFilepath string
 }
 
 // Zoneinfo returns the local tz filename from the tz database.
-func (t tz) Zoneinfo() (string, error) {
+func (t Tz) Zoneinfo() (string, error) {
 	localtimeRelPath, err := filepath.EvalSymlinks(t.localtimeFilepath)
 	if err != nil {
 		return "", err
@@ -27,6 +28,7 @@ func (t tz) Zoneinfo() (string, error) {
 	return tz, nil
 }
 
-func NewTz(localtimeFilepath string) *tz {
-	return &tz{localtimeFilepath}
+// NewTz creates a new tz.
+func NewTz(localtimeFilepath string) *Tz {
+	return &Tz{localtimeFilepath}
 }
