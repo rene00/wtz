@@ -33,7 +33,7 @@ func TestZoneinfo(t *testing.T) {
 		}
 		defer os.Remove(s)
 
-		_t := &tz{s}
+		_t := &Tz{s}
 		got, err := _t.Zoneinfo()
 		if err != nil {
 			t.Error(err)
