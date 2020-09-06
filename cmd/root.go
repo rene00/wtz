@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/olekukonko/tablewriter"
+	"github.com/rene00/wtz/config"
 	"github.com/rene00/wtz/internal/tz"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -41,15 +42,28 @@ func generateRows(date time.Time, local *time.Location, locations []string) ([][
 var rootCmd = &cobra.Command{
 	Use: "wtz [command]",
 	PreRun: func(cmd *cobra.Command, args []string) {
-		for _, flag := range []string{"localtime", "tz", "date"} {
+		for _, flag := range []string{"localtime", "tz", "date", "zoneinfo", "config-file"} {
 			_ = viper.BindPFlag(flag, cmd.Flags().Lookup(flag))
 		}
 	},
 	RunE: func(cmd *cobra.Command, args []string) error {
-		t := tz.NewTz(viper.GetString("localtime"))
-		zoneinfo, err := t.Zoneinfo()
+		c, err := config.NewConfig(cmd.Flags())
 		if err != nil {
+			fmt.Fprintf(os.Stderr, "%v\n", err)
 			return err
+		}
+
+		zoneinfo := viper.GetString("zoneinfo")
+		if zoneinfo == "" {
+			zoneinfo = c.UserViperConfig.GetString("zoneinfo")
+		}
+
+		if zoneinfo == "" {
+			t := tz.NewTz(viper.GetString("localtime"))
+			zoneinfo, err = t.Zoneinfo()
+			if err != nil {
+				return err
+			}
 		}
 
 		local, err := time.LoadLocation(zoneinfo)
@@ -63,9 +77,12 @@ var rootCmd = &cobra.Command{
 		}
 
 		tz := viper.GetStringSlice("tz")
+		if len(tz) == 0 {
+			tz = c.UserViperConfig.GetStringSlice("tz")
+		}
+
 		data, err := generateRows(date, local, tz)
 		if err != nil {
-			fmt.Println("DEBUG1")
 			return err
 		}
 
@@ -92,6 +109,8 @@ func init() {
 	f.String("localtime", "/etc/localtime", "filepath to localtime which is usually /etc/localtime")
 	f.StringSlice("tz", []string{""}, "timezones")
 	f.String("date", time.Now().Format("2006-01-02"), "date")
+	f.String("zoneinfo", "", "local zoneinfo")
+	f.String("config-file", "", "config file")
 }
 
 // Execute the root command.
@@ -100,4 +119,9 @@ func Execute() {
 		fmt.Fprint(os.Stderr, err)
 		os.Exit(1)
 	}
+}
+
+func init() {
+	BinaryName := os.Args[0]
+	config.SetDefaultDirName(BinaryName)
 }
