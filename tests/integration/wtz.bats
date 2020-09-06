@@ -57,3 +57,12 @@
     [ "${status}" -eq 0 ]
 }
 
+@test "wtz --zoneinfo" {
+    run wtz --zoneinfo "Australia/Melbourne"
+    printf '%s\n' 'output: ' "${output}" >&2
+    [ "${status}" -eq 0 ]
+
+    run wtz --zoneinfo "DoesNotExit"
+    printf '%s\n' 'output: ' "${output}" >&2
+    [ "${status}" -eq 1 ]
+}

@@ -27,6 +27,7 @@ func NewConfig(flags *pflag.FlagSet) (*Config, error) {
 	dir := Dir()
 	configName := "wtz.json"
 	configType := "json"
+
 	if configFile, _ := flags.GetString("config-file"); configFile != "" {
 		abs, err := filepath.Abs(configFile)
 		if err != nil {
@@ -39,9 +40,17 @@ func NewConfig(flags *pflag.FlagSet) (*Config, error) {
 		configName = filepath.Base(abs)
 	}
 
+	configFilePath := filepath.Join(dir, configName)
+	viperConfig := viper.New()
+	viperConfig.AddConfigPath(dir)
+	viperConfig.SetConfigName(configName)
+	viperConfig.SetConfigFile(configFilePath)
+	viperConfig.SetConfigType(configType)
+	viperConfig.ReadInConfig()
+
 	return &Config{
 		UserViperConfig: viperConfig,
-		FilePath:        filepath.Join(dir, configName),
+		FilePath:        configFilePath,
 		Dir:             dir,
 	}, nil
 }
