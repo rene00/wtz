@@ -22,7 +22,7 @@ func (t Tz) Zoneinfo() (string, error) {
 		return "", err
 	}
 	tz := localtimeAbsPath
-	for _, i := range []string{"/usr/share/zoneinfo/", "/var/db/timezone/zoneinfo/"} {
+	for _, i := range []string{"/usr/share/zoneinfo/", "/var/db/timezone/zoneinfo/", "/private/var/db/timezone/tz/2020a.1.0/zoneinfo/"} {
 		tz = strings.ReplaceAll(tz, i, "")
 	}
 	return tz, nil
