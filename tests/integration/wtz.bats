@@ -6,59 +6,59 @@
     [ "${status}" -eq 0 ]
 }
 
-@test "wtz --tz" {
-    run wtz --tz UTC,Australia/ACT
+@test "wtz --timezones" {
+    run wtz --timezones UTC,Australia/ACT
     printf '%s\n' 'output: ' "${output}" >&2
     [ "${status}" -eq 0 ]
 
-    run wtz --tz UTC,DoesNotExist
+    run wtz --timezones UTC,DoesNotExist
     printf '%s\n' 'output: ' "${output}" >&2
     [ "${status}" -eq 1 ]
 }
 
-@test "wtz --date" {
-    run wtz --date 2020-01-01
+@test "wtz --date --timezones" {
+    run wtz --date 2020-01-01 --timezones UTC,Australia/ACT
     printf '%s\n' 'output: ' "${output}" >&2
     [ "${status}" -eq 0 ]
 
-    run wtz --date 2021-01-01
+    run wtz --date 2021-01-01  --timezones UTC,Australia/ACT
     printf '%s\n' 'output: ' "${output}" >&2
     [ "${status}" -eq 0 ]
 
-    run wtz --date invalidDate
+    run wtz --date invalidDate  --timezones UTC,Australia/ACT
     printf '%s\n' 'output: ' "${output}" >&2
     [ "${status}" -eq 1 ]
 }
 
-@test "wtz --date --tz" {
-    run wtz --date 2020-01-01 --tz UTC,Australia/ACT
+@test "wtz --date --timezones" {
+    run wtz --date 2020-01-01 --timezones UTC,Australia/ACT
     printf '%s\n' 'output: ' "${output}" >&2
     [ "${status}" -eq 0 ]
 }
 
 @test "wtz --localtime" {
     ln -sf /usr/share/zoneinfo/Australia/Melbourne ${BATS_TMPDIR}/lt.$$
-    run wtz --localtime ${BATS_TMPDIR}/lt.$$
+    run wtz --localtime ${BATS_TMPDIR}/lt.$$ --timezones UTC
     printf '%s\n' 'output: ' "${output}" >&2
     [ "${status}" -eq 0 ]
 }
 
 @test "wtz --date --localtime" {
     ln -sf /usr/share/zoneinfo/Australia/Melbourne ${BATS_TMPDIR}/lt.$$
-    run wtz --localtime ${BATS_TMPDIR}/lt.$$ --date 2020-01-01
+    run wtz --localtime ${BATS_TMPDIR}/lt.$$ --date 2020-01-01 --timezones UTC,Australia/Melbourne
     printf '%s\n' 'output: ' "${output}" >&2
     [ "${status}" -eq 0 ]
 }
 
-@test "wtz --date --localtime --tz" {
+@test "wtz --date --localtime" {
     ln -sf /usr/share/zoneinfo/Australia/Melbourne ${BATS_TMPDIR}/lt.$$
-    run wtz --localtime ${BATS_TMPDIR}/lt.$$ --date 2020-01-01 --tz UTC,Australia/ACT
+    run wtz --localtime ${BATS_TMPDIR}/lt.$$ --date 2020-01-01 --timezones UTC,Poland
     printf '%s\n' 'output: ' "${output}" >&2
     [ "${status}" -eq 0 ]
 }
 
-@test "wtz --zoneinfo" {
-    run wtz --zoneinfo "Australia/Melbourne"
+@test "wtz --ignore-local-timezone" {
+    run wtz --timezones UTC,Australia/Canberra --include-local-timezone=false
     printf '%s\n' 'output: ' "${output}" >&2
     [ "${status}" -eq 0 ]
 

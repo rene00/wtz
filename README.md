@@ -2,24 +2,44 @@
 
 _What timezone?_
 
-A small command line tool that shows times in timezones you're interested in:
+A small command line tool that shows times in timezones you're interested in.
 
-The current timezone of your computer:
+Your computers local timezone and UTC:
 ```
-$ wtz
-+-----------+
-| MELBOURNE |
-+-----------+
-| 00:00     |
-| 01:00     |
-| 02:00     |
-| 03:00     |
-[...]
+$ wtz --timezones UTC 
++-----------+-------+
+| MELBOURNE |  UTC  |
++-----------+-------+
+| 00:00     | 14:00 |
+| 01:00     | 15:00 |
+| 02:00     | 16:00 |
+| 03:00     | 17:00 |
+| 04:00     | 18:00 |
+| 05:00     | 19:00 |
+| 06:00     | 20:00 |
+| 07:00     | 21:00 |
+| 08:00     | 22:00 |
+| 09:00     | 23:00 |
+| 10:00     | 00:00 |
+| 11:00     | 01:00 |
+| 12:00     | 02:00 |
+| 13:00     | 03:00 |
+| 14:00     | 04:00 |
+| 15:00     | 05:00 |
+| 16:00     | 06:00 |
+| 17:00     | 07:00 |
+| 18:00     | 08:00 |
+| 19:00     | 09:00 |
+| 20:00     | 10:00 |
+| 21:00     | 11:00 |
+| 22:00     | 12:00 |
+| 23:00     | 13:00 |
++-----------+-------+
 ```
 
-The current timezone of your computer and other timezones you're interested in.
+Your local timezone and a list of other timezones:
 ```
-$ wtz --tz Europe/Madrid,America/New_York,America/Argentina/Buenos_Aires,UTC
+$ wtz --timezones Europe/Madrid,America/New_York,America/Argentina/Buenos_Aires,UTC
 +-----------+--------+----------+--------------+-------+
 | MELBOURNE | MADRID | NEW YORK | BUENOS AIRES |  UTC  |
 +-----------+--------+----------+--------------+-------+
@@ -52,7 +72,7 @@ $ wtz --tz Europe/Madrid,America/New_York,America/Argentina/Buenos_Aires,UTC
 
 Same command above, but for a future date:
 ```
-$ wtz --tz Europe/Madrid,America/New_York,America/Argentina/Buenos_Aires,UTC --date 2022-01-01
+$ wtz --timezones Europe/Madrid,America/New_York,America/Argentina/Buenos_Aires,UTC --date 2022-01-01
 +-----------+--------+----------+--------------+-------+
 | MELBOURNE | MADRID | NEW YORK | BUENOS AIRES |  UTC  |
 +-----------+--------+----------+--------------+-------+
@@ -83,37 +103,37 @@ $ wtz --tz Europe/Madrid,America/New_York,America/Argentina/Buenos_Aires,UTC --d
 +-----------+--------+----------+--------------+-------+
 ```
 
-Or with another main timezone that isn't your local timezone:
+Or other timezones, not including your local timezone, with the first timezone listed being the main timezone starting at `00:00`:
 ```
-$ wtz --zoneinfo Hongkong --tz America/New_York,UTC
-+----------+----------+-------+
-| HONGKONG | NEW YORK |  UTC  |
-+----------+----------+-------+
-| 00:00    | 12:00    | 16:00 |
-| 01:00    | 13:00    | 17:00 |
-| 02:00    | 14:00    | 18:00 |
-| 03:00    | 15:00    | 19:00 |
-| 04:00    | 16:00    | 20:00 |
-| 05:00    | 17:00    | 21:00 |
-| 06:00    | 18:00    | 22:00 |
-| 07:00    | 19:00    | 23:00 |
-| 08:00    | 20:00    | 00:00 |
-| 09:00    | 21:00    | 01:00 |
-| 10:00    | 22:00    | 02:00 |
-| 11:00    | 23:00    | 03:00 |
-| 12:00    | 00:00    | 04:00 |
-| 13:00    | 01:00    | 05:00 |
-| 14:00    | 02:00    | 06:00 |
-| 15:00    | 03:00    | 07:00 |
-| 16:00    | 04:00    | 08:00 |
-| 17:00    | 05:00    | 09:00 |
-| 18:00    | 06:00    | 10:00 |
-| 19:00    | 07:00    | 11:00 |
-| 20:00    | 08:00    | 12:00 |
-| 21:00    | 09:00    | 13:00 |
-| 22:00    | 10:00    | 14:00 |
-| 23:00    | 11:00    | 15:00 |
-+----------+----------+-------+
+$ wtz --timezones Portugal,Singapore,Indian/Cocos,America/Montreal --include-local-timezone=false
++----------+-----------+-------+----------+
+| PORTUGAL | SINGAPORE | COCOS | MONTREAL |
++----------+-----------+-------+----------+
+| 00:00    | 07:00     | 05:30 | 19:00    |
+| 01:00    | 08:00     | 06:30 | 20:00    |
+| 02:00    | 09:00     | 07:30 | 21:00    |
+| 03:00    | 10:00     | 08:30 | 22:00    |
+| 04:00    | 11:00     | 09:30 | 23:00    |
+| 05:00    | 12:00     | 10:30 | 00:00    |
+| 06:00    | 13:00     | 11:30 | 01:00    |
+| 07:00    | 14:00     | 12:30 | 02:00    |
+| 08:00    | 15:00     | 13:30 | 03:00    |
+| 09:00    | 16:00     | 14:30 | 04:00    |
+| 10:00    | 17:00     | 15:30 | 05:00    |
+| 11:00    | 18:00     | 16:30 | 06:00    |
+| 12:00    | 19:00     | 17:30 | 07:00    |
+| 13:00    | 20:00     | 18:30 | 08:00    |
+| 14:00    | 21:00     | 19:30 | 09:00    |
+| 15:00    | 22:00     | 20:30 | 10:00    |
+| 16:00    | 23:00     | 21:30 | 11:00    |
+| 17:00    | 00:00     | 22:30 | 12:00    |
+| 18:00    | 01:00     | 23:30 | 13:00    |
+| 19:00    | 02:00     | 00:30 | 14:00    |
+| 20:00    | 03:00     | 01:30 | 15:00    |
+| 21:00    | 04:00     | 02:30 | 16:00    |
+| 22:00    | 05:00     | 03:30 | 17:00    |
+| 23:00    | 06:00     | 04:30 | 18:00    |
++----------+-----------+-------+----------+
 ```
 
 See [examples/wtz.json](./examples/wtz.json) as an example config file which can be copied to `~/.config/wtz/wtz.json`.
