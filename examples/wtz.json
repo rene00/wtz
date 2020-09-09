@@ -1,6 +1,5 @@
 {
-  "zoneinfo": "Asia/Ho_Chi_Minh",
-  "tz": [
+  "timezones": [
     "Europe/Madrid",
     "America/New_York",
     "America/Argentina/Buenos_Aires",
