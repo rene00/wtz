@@ -9,7 +9,7 @@ import (
 
 	"github.com/olekukonko/tablewriter"
 	"github.com/rene00/wtz/config"
-	"github.com/rene00/wtz/internal/tz"
+	"github.com/rene00/wtz/internal/tzlookup"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -60,9 +60,10 @@ var rootCmd = &cobra.Command{
 		var localTimezone string
 
 		if viper.GetBool("include-local-timezone") {
-			t := tz.NewTz(viper.GetString("localtime"))
-			localTimezone, err = t.Zoneinfo()
+			tzl := tzlookup.New()
+			localTimezone, err = tzl.Local()
 			if err != nil {
+				fmt.Fprintf(os.Stderr, "%v\n", err)
 				return err
 			}
 		}
