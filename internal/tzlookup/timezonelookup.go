@@ -10,8 +10,9 @@ import (
 	"strings"
 )
 
-func New(opts ...Opt) (t *tzlookup) {
-	t = &tzlookup{}
+// New creates a new Tzlookup.
+func New(opts ...Opt) (t *Tzlookup) {
+	t = &Tzlookup{}
 	t.localtimePath = "/etc/localtime"
 	t.tzName = "TZ"
 	for _, opt := range opts {
@@ -20,7 +21,8 @@ func New(opts ...Opt) (t *tzlookup) {
 	return
 }
 
-type tzlookup struct {
+// Tzlookup provides methods to lookup the local timezone.
+type Tzlookup struct {
 	// The path of the localtime file.
 	localtimePath string
 
@@ -28,28 +30,31 @@ type tzlookup struct {
 	tzName string
 }
 
-type Opt func(*tzlookup)
+// Opt is a functional option for Tzlookup.
+type Opt func(*Tzlookup)
 
+// WithLocaltimePath is a functional option that provides a way for the caller to set the localtime path.
 func WithLocaltimePath(s string) Opt {
-	return func(t *tzlookup) {
+	return func(t *Tzlookup) {
 		t.localtimePath = s
 	}
 }
 
+// WithTZName is a function option that provides a way for the called to set the environment variable name used to lookup the local timezone.
 func WithTZName(s string) Opt {
-	return func(t *tzlookup) {
+	return func(t *Tzlookup) {
 		t.tzName = s
 	}
 }
 
-func (t *tzlookup) checkTZ() (localTimezone string) {
+func (t *Tzlookup) checkTZ() (localTimezone string) {
 	if v, ok := os.LookupEnv(t.tzName); ok {
 		localTimezone = v
 	}
 	return
 }
 
-func (t *tzlookup) checkLocaltime() (string, error) {
+func (t *Tzlookup) checkLocaltime() (string, error) {
 	absPath, err := filepath.EvalSymlinks(t.localtimePath)
 	if err != nil {
 		return "", err
@@ -80,7 +85,8 @@ func (t *tzlookup) checkLocaltime() (string, error) {
 	return localTimezone, nil
 }
 
-func (t *tzlookup) Local() (string, error) {
+// Local attempts to lookup and return the local timezone.
+func (t *Tzlookup) Local() (string, error) {
 	var err error
 	localTimezone := t.checkTZ()
 	if localTimezone == "" {
