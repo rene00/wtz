@@ -49,12 +49,29 @@ var rootCmd = &cobra.Command{
 		for _, flag := range []string{"localtime", "timezones", "date", "include-local-timezone", "config-file"} {
 			_ = viper.BindPFlag(flag, cmd.Flags().Lookup(flag))
 		}
+		_ = viper.BindPFlag("list-timezones", cmd.Flags().Lookup("list-timezones"))
 	},
 	RunE: func(cmd *cobra.Command, args []string) error {
 		c, err := config.NewConfig(cmd.Flags())
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "%v\n", err)
 			return err
+		}
+
+		if viper.GetBool("list-timezones") {
+			table := tablewriter.NewWriter(os.Stdout)
+			table.SetHeader([]string{"Country", "Timezone"})
+			for _, country := range tz.ListCountries() {
+				for idx, zone := range country.Zones {
+					if idx == 0 {
+						table.Append([]string{country.Name, zone.Name})
+					} else {
+						table.Append([]string{"", zone.Name})
+					}
+				}
+			}
+			table.Render()
+			return nil
 		}
 
 		var localTimezone string
@@ -78,7 +95,7 @@ var rootCmd = &cobra.Command{
 		}
 
 		if len(timezones) == 0 {
-			return errors.New("No timezones set")
+			return errors.New("no timezones set")
 		}
 
 		if viper.GetBool("include-local-timezone") {
@@ -114,6 +131,7 @@ func init() {
 	f.String("date", time.Now().Format("2006-01-02"), "date")
 	f.Bool("include-local-timezone", true, "Include local timezone")
 	f.String("config-file", "", "config file")
+	f.Bool("list-timezones", false, "List timezones")
 }
 
 // Execute the root command.
