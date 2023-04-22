@@ -60,15 +60,15 @@ func main() {
 	cmd := flag.NewFlagSet("wtz", flag.ExitOnError)
 
 	flags := flags{}
-	flags.date = cmd.String("date", time.Now().Format("2006-01-02"), fmt.Sprintf("The date to display (default: %s)", time.Now().Format("2006-01-02")))
-	flags.includeLocalTimezone = cmd.Bool("include-local-timezone", true, "Include the local timezone (default: true)")
+	flags.date = cmd.String("date", time.Now().Format("2006-01-02"), fmt.Sprintf("The date to display", time.Now().Format("2006-01-02")))
+	flags.includeLocalTimezone = cmd.Bool("include-local-timezone", true, "Include the local timezone")
 
 	usr, err := user.Current()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "%v\n", err)
 		os.Exit(1)
 	}
-	flags.configFile = cmd.String("config-file", path.Join(usr.HomeDir, ".config", "wtz", "wtz.json"), "Config file (defaults to ~/.config/wtz/wtz.json)")
+	flags.configFile = cmd.String("config-file", path.Join(usr.HomeDir, ".config", "wtz", "wtz.json"), "Config file path")
 
 	timezonesList := stringList{}
 	flags.timezones = &timezonesList
@@ -76,7 +76,12 @@ func main() {
 
 	cmd.Parse(os.Args[1:])
 
-	c, err := config.NewConfig(*flags.configFile)
+	configOptions := []config.Option{}
+	if _, err := os.Stat(*flags.configFile); err == nil {
+		configOptions = append(configOptions, config.WithConfigFile(*flags.configFile))
+	}
+
+	c, err := config.NewConfig(configOptions...)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "%v\n", err)
 		os.Exit(1)
