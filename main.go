@@ -16,27 +16,7 @@ import (
 	"github.com/rene00/wtz/internal/ui"
 )
 
-const version = "0.1.3"
-
-/*
-
-$ ./wtz --help
-Usage:
-  wtz [command] [flags]
-  wtz [command]
-
-Available Commands:
-  help        Help about any command
-  version     show version
-
-Flags:
-      --config-file string       config file
-      --date string              date (default "2023-04-22")
-  -h, --help                     help for wtz
-      --include-local-timezone   Include local timezone (default true)
-      --localtime string         filepath to localtime which is usually /etc/localtime (default "/etc/localtime")
-      --timezones strings        A comma separated list of timezones
-*/
+const version = "0.1.4"
 
 type stringList []string
 
