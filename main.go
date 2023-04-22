@@ -11,12 +11,12 @@ import (
 	"time"
 
 	"github.com/olekukonko/tablewriter"
-	"github.com/rene00/wtz/config"
+	"github.com/rene00/wtz/internal/config"
 	"github.com/rene00/wtz/internal/tzlookup"
 	"github.com/rene00/wtz/internal/ui"
 )
 
-const version = "0.1.2"
+const version = "0.1.3"
 
 /*
 
