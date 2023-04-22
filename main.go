@@ -60,7 +60,7 @@ func main() {
 	cmd := flag.NewFlagSet("wtz", flag.ExitOnError)
 
 	flags := flags{}
-	flags.date = cmd.String("date", time.Now().Format("2006-01-02"), fmt.Sprintf("The date to display", time.Now().Format("2006-01-02")))
+	flags.date = cmd.String("date", time.Now().Format("2006-01-02"), "The date to display")
 	flags.includeLocalTimezone = cmd.Bool("include-local-timezone", true, "Include the local timezone")
 
 	usr, err := user.Current()
