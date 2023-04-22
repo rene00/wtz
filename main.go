@@ -54,6 +54,7 @@ type flags struct {
 	configFile           *string
 	timezones            *stringList
 	includeLocalTimezone *bool
+	localtime            *string
 }
 
 func main() {
@@ -62,6 +63,7 @@ func main() {
 	flags := flags{}
 	flags.date = cmd.String("date", time.Now().Format("2006-01-02"), "The date to display")
 	flags.includeLocalTimezone = cmd.Bool("include-local-timezone", true, "Include the local timezone")
+	flags.localtime = cmd.String("localtime", "/etc/localtime", "Filepath to localtime")
 
 	usr, err := user.Current()
 	if err != nil {
@@ -107,7 +109,7 @@ func main() {
 
 	if *flags.includeLocalTimezone {
 		var localTimezone string
-		tzl := tzlookup.New()
+		tzl := tzlookup.New(*flags.localtime)
 		localTimezone, err = tzl.Local()
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "%v\n", err)
@@ -116,7 +118,6 @@ func main() {
 		timezones = append([]string{localTimezone}, timezones...)
 	}
 
-	data, err := ui.GenerateRows(date, timezones)
 	cities := []string{}
 	for _, i := range timezones {
 		_, city := filepath.Split(i)
@@ -125,6 +126,13 @@ func main() {
 
 	table := tablewriter.NewWriter(os.Stdout)
 	table.SetHeader(cities)
+
+	data, err := ui.GenerateRows(date, timezones)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "%v\n", err)
+		os.Exit(1)
+	}
+
 	for _, v := range data {
 		table.Append(v)
 	}

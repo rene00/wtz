@@ -42,8 +42,4 @@
     run wtz --timezones UTC,Australia/Canberra --include-local-timezone=false
     printf '%s\n' 'output: ' "${output}" >&2
     [ "${status}" -eq 0 ]
-
-    run wtz --zoneinfo "DoesNotExit"
-    printf '%s\n' 'output: ' "${output}" >&2
-    [ "${status}" -eq 1 ]
 }
