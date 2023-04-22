@@ -21,9 +21,6 @@ clean:
 install:
 	go install -ldflags=$(BUILD_LDFLAGS) .
 
-$(GOBIN)/golint:
-	cd && go get golang.org/x/lint/golint
-
 $(GOBIN)/goxz:
 	cd && go get github.com/Songmu/goxz/cmd/goxz
 
@@ -39,9 +36,8 @@ $(GOBIN)/gobump:
 	@cd && go get github.com/x-motemen/gobump/cmd/gobump
 
 .PHONY: lint
-lint: $(GOBIN)/golint
+lint:
 	go vet .
-	golint -set_exit_status . cmd internal/...
 
 .PHONY: test
 test: clean build

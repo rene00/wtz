@@ -11,10 +11,8 @@ import (
 )
 
 // New creates a new Tzlookup.
-func New(opts ...Opt) (t *Tzlookup) {
-	t = &Tzlookup{}
-	t.localtimePath = "/etc/localtime"
-	t.tzName = "TZ"
+func New(localtime string, opts ...Opt) (t *Tzlookup) {
+	t = &Tzlookup{localtimePath: localtime, tzName: "TZ"}
 	for _, opt := range opts {
 		opt(t)
 	}
@@ -32,13 +30,6 @@ type Tzlookup struct {
 
 // Opt is a functional option for Tzlookup.
 type Opt func(*Tzlookup)
-
-// WithLocaltimePath is a functional option that provides a way for the caller to set the localtime path.
-func WithLocaltimePath(s string) Opt {
-	return func(t *Tzlookup) {
-		t.localtimePath = s
-	}
-}
 
 // WithTZName is a function option that provides a way for the called to set the environment variable name used to lookup the local timezone.
 func WithTZName(s string) Opt {

@@ -63,7 +63,7 @@ func TestTzLookup(t *testing.T) {
 				t.Fatal(err)
 			}
 
-			tzl := New(WithLocaltimePath(localtimePath))
+			tzl := New(localtimePath)
 			got, err := tzl.checkLocaltime()
 			assert.NoError(t, err)
 			assert.Equal(t, tc.expect, got)
@@ -97,7 +97,7 @@ func TestTzLookup(t *testing.T) {
 			t.Fatal(err)
 		}
 
-		tzl := New(WithLocaltimePath(localtimePath))
+		tzl := New(localtimePath)
 		_, err = tzl.checkLocaltime()
 		assert.Error(t, err)
 	})
@@ -105,7 +105,7 @@ func TestTzLookup(t *testing.T) {
 	t.Run("checkTZ", func(t *testing.T) {
 		os.Setenv("__tzlookuptest", "test1")
 		defer os.Unsetenv("__tzlookuptest")
-		tzl := New(WithTZName("__tzlookuptest"))
+		tzl := New("/etc/localtime", WithTZName("__tzlookuptest"))
 		assert.Equal(t, "test1", tzl.checkTZ())
 	})
 }
